@@ -1,0 +1,34 @@
+function isprime(num)
+	tic
+    par_thresh = 1000000000;
+    NUM_WORKERS = 7;
+    
+    if (mod(num,2) == 0 && num ~=2)
+		error('Not prime')
+    else
+        if (num>par_thresh)
+            if(matlabpool('size') > 0)
+                matlabpool close
+            end
+            myCluster = parcluster('local');
+            myCluster.NumWorkers = NUM_WORKERS;
+            matlabpool(myCluster); 
+            
+            parfor i=2:num-1
+                if (mod(num,i)==0)
+                    error('Not prime')
+                end
+            end
+        else
+            for i=2:num-1
+                if (mod(num,i)==0)
+                    error('Not prime')
+                end
+            end
+        end
+    end
+    disp('Prime!')
+    
+    toc
+    
+    
